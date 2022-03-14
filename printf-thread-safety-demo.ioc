@@ -1,6 +1,7 @@
 #MicroXplorer Configuration settings - do not modify
-FREERTOS.IPParameters=Tasks01,configENABLE_FPU,configUSE_NEWLIB_REENTRANT
-FREERTOS.Tasks01=defaultTask,24,128,StartDefaultTask,Default,NULL,Dynamic,NULL,NULL
+FREERTOS.FootprintOK=true
+FREERTOS.IPParameters=Tasks01,configENABLE_FPU,configUSE_NEWLIB_REENTRANT,FootprintOK
+FREERTOS.Tasks01=blink_red,24,128,led_blink_red,Default,NULL,Dynamic,NULL,NULL;blink_green,24,128,led_blink_green,Default,NULL,Dynamic,NULL,NULL;blink_blue,24,128,led_blink_blue,Default,NULL,Dynamic,NULL,NULL
 FREERTOS.configENABLE_FPU=1
 FREERTOS.configUSE_NEWLIB_REENTRANT=1
 File.Version=6

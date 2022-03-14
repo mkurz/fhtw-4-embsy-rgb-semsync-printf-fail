@@ -42,10 +42,24 @@
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef huart2;
 
-/* Definitions for defaultTask */
-osThreadId_t defaultTaskHandle;
-const osThreadAttr_t defaultTask_attributes = {
-  .name = "defaultTask",
+/* Definitions for blink_red */
+osThreadId_t blink_redHandle;
+const osThreadAttr_t blink_red_attributes = {
+  .name = "blink_red",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for blink_green */
+osThreadId_t blink_greenHandle;
+const osThreadAttr_t blink_green_attributes = {
+  .name = "blink_green",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for blink_blue */
+osThreadId_t blink_blueHandle;
+const osThreadAttr_t blink_blue_attributes = {
+  .name = "blink_blue",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
@@ -57,7 +71,9 @@ const osThreadAttr_t defaultTask_attributes = {
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
-void StartDefaultTask(void *argument);
+void led_blink_red(void *argument);
+void led_blink_green(void *argument);
+void led_blink_blue(void *argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -122,8 +138,14 @@ int main(void)
   /* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
-  /* creation of defaultTask */
-  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+  /* creation of blink_red */
+  blink_redHandle = osThreadNew(led_blink_red, NULL, &blink_red_attributes);
+
+  /* creation of blink_green */
+  blink_greenHandle = osThreadNew(led_blink_green, NULL, &blink_green_attributes);
+
+  /* creation of blink_blue */
+  blink_blueHandle = osThreadNew(led_blink_blue, NULL, &blink_blue_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -279,14 +301,14 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE END 4 */
 
-/* USER CODE BEGIN Header_StartDefaultTask */
+/* USER CODE BEGIN Header_led_blink_red */
 /**
-  * @brief  Function implementing the defaultTask thread.
+  * @brief  Function implementing the blink_red thread.
   * @param  argument: Not used
   * @retval None
   */
-/* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void *argument)
+/* USER CODE END Header_led_blink_red */
+void led_blink_red(void *argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
@@ -295,6 +317,42 @@ void StartDefaultTask(void *argument)
     osDelay(1);
   }
   /* USER CODE END 5 */
+}
+
+/* USER CODE BEGIN Header_led_blink_green */
+/**
+* @brief Function implementing the blink_green thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_led_blink_green */
+void led_blink_green(void *argument)
+{
+  /* USER CODE BEGIN led_blink_green */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END led_blink_green */
+}
+
+/* USER CODE BEGIN Header_led_blink_blue */
+/**
+* @brief Function implementing the blink_blue thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_led_blink_blue */
+void led_blink_blue(void *argument)
+{
+  /* USER CODE BEGIN led_blink_blue */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END led_blink_blue */
 }
 
 /**
