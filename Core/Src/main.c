@@ -69,6 +69,7 @@ const osSemaphoreAttr_t myBinarySem_attributes = {
   .name = "myBinarySem"
 };
 /* USER CODE BEGIN PV */
+int current_led = 0; // 0 = red, 1 = green, 2 = blue
 
 /* USER CODE END PV */
 
@@ -81,6 +82,7 @@ void led_blink_green(void *argument);
 void led_blink_blue(void *argument);
 
 /* USER CODE BEGIN PFP */
+void switch_color(char*, int, GPIO_TypeDef*, uint16_t);
 
 /* USER CODE END PFP */
 
@@ -307,6 +309,41 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void switch_color(char* color, int led, GPIO_TypeDef* GPIO_Port, uint16_t GPIO_Pin) {
+  /* Infinite loop */
+  for(;;)
+  {
+    osStatus_t status = osSemaphoreAcquire(myBinarySemHandle, osWaitForever);
+    if (status != osOK) {
+      // Konnte den Semaphor nicht acquiren, es gab irgendein Problem :(
+      continue; // brich hier ab und fang die for-Schleife nochmal von vorne an
+    }
+    // Der Semaphor wurde ab hier erfolgreich acquired -> wir befinden uns im "kritischen Code"
+
+    if (current_led != led) {
+      // Es soll eine andere LED leuchten :( Deshalb brechen wir ab, aber geben vorher noch den Semaphor wieder frei
+      osSemaphoreRelease(myBinarySemHandle);
+      continue; // brich hier ab und fang die for-Schleife nochmal von vorne an
+    }
+
+    // Es läuft der Task mit der gewünschten Farbe, also drehen wir diese Farbe auf
+    HAL_GPIO_TogglePin(GPIO_Port, GPIO_Pin); // Schalte LED ein
+    osDelay(1000); // Warte x ticks
+    HAL_GPIO_TogglePin(GPIO_Port, GPIO_Pin); // Schalte LED wieder aus
+
+    // Nun wechseln wir zu nächsten Farbe
+    if(current_led == 2) {
+      current_led = 0; // Nach blau soll wieder die rote LED leuchten
+    } else {
+      current_led++; // Die nächste Farbe kommt dran (nach rot -> grün, nach grün -> blau) (in ihrem jeweiligen Task)
+    }
+
+    // Fertig, jetzt nur noch Semaphor freigeben und das wars
+    // Mit dem releasen werden alle Tasks, welche auf den Semaphore warten, notified
+    // Der erste Task der osSemaphoreAcquire aufgerufen hat kommt zuerst dran (FIFO)
+    osSemaphoreRelease(myBinarySemHandle);
+  }
+}
 
 /* USER CODE END 4 */
 
@@ -320,11 +357,7 @@ static void MX_GPIO_Init(void)
 void led_blink_red(void *argument)
 {
   /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
+  switch_color("red", 0, RGB_RED_GPIO_Port, RGB_RED_Pin);
   /* USER CODE END 5 */
 }
 
@@ -338,11 +371,7 @@ void led_blink_red(void *argument)
 void led_blink_green(void *argument)
 {
   /* USER CODE BEGIN led_blink_green */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
+  switch_color("green", 1, RGB_GREEN_GPIO_Port, RGB_GREEN_Pin);
   /* USER CODE END led_blink_green */
 }
 
@@ -356,11 +385,7 @@ void led_blink_green(void *argument)
 void led_blink_blue(void *argument)
 {
   /* USER CODE BEGIN led_blink_blue */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
+  switch_color("blue", 2, RGB_BLUE_GPIO_Port, RGB_BLUE_Pin);
   /* USER CODE END led_blink_blue */
 }
 
