@@ -349,6 +349,7 @@ void switch_color(char* color, int led, GPIO_TypeDef* GPIO_Port, uint16_t GPIO_P
 
     if (current_led != led) {
       // Es soll eine andere LED leuchten :( Deshalb brechen wir ab, aber geben vorher noch den Semaphor wieder frei
+      printf("Es laeuft der Task fuer Farbe %s aber die Farbe %d ist jetzt dran\n", color, current_led);
       osSemaphoreRelease(myBinarySemHandle);
       continue; // brich hier ab und fang die for-Schleife nochmal von vorne an
     }
