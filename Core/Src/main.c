@@ -63,6 +63,11 @@ const osThreadAttr_t blink_blue_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for myBinarySem */
+osSemaphoreId_t myBinarySemHandle;
+const osSemaphoreAttr_t myBinarySem_attributes = {
+  .name = "myBinarySem"
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -124,6 +129,10 @@ int main(void)
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
+
+  /* Create the semaphores(s) */
+  /* creation of myBinarySem */
+  myBinarySemHandle = osSemaphoreNew(1, 1, &myBinarySem_attributes);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
