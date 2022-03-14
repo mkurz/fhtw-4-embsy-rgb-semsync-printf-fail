@@ -98,6 +98,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  HAL_GPIO_TogglePin(GPIOA, RGB_BLUE_Pin|RGB_RED_Pin|RGB_GREEN_Pin);
 
   /* USER CODE END 2 */
 
