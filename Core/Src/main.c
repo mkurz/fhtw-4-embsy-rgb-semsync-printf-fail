@@ -148,6 +148,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_GPIO_TogglePin(GPIOA, RGB_BLUE_Pin|RGB_RED_Pin|RGB_GREEN_Pin);
 
+  printf("\n\nDas Programm wird gestartet\n\n");
+
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -352,6 +354,7 @@ void switch_color(char* color, int led, GPIO_TypeDef* GPIO_Port, uint16_t GPIO_P
     }
 
     // Es läuft der Task mit der gewünschten Farbe, also drehen wir diese Farbe auf
+    printf("Nun kommt die Farbe %s\n", color);
     HAL_GPIO_TogglePin(GPIO_Port, GPIO_Pin); // Schalte LED ein
     osDelay(1000); // Warte x ticks
     HAL_GPIO_TogglePin(GPIO_Port, GPIO_Pin); // Schalte LED wieder aus
@@ -366,6 +369,7 @@ void switch_color(char* color, int led, GPIO_TypeDef* GPIO_Port, uint16_t GPIO_P
     // Fertig, jetzt nur noch Semaphor freigeben und das wars
     // Mit dem releasen werden alle Tasks, welche auf den Semaphore warten, notified
     // Der erste Task der osSemaphoreAcquire aufgerufen hat kommt zuerst dran (FIFO)
+    printf("Farbe %s fertig\n\n", color);
     osSemaphoreRelease(myBinarySemHandle);
   }
 }
