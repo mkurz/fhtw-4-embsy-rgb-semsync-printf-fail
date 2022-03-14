@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>printf-thread-safety-demo</name>
+	<name>rtos_rgb_semsync_printf_fail</name>
 	<comment></comment>
 	<projects>
 	</projects>
