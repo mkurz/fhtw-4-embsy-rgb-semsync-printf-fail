@@ -351,6 +351,7 @@ void switch_color(char* color, int led, GPIO_TypeDef* GPIO_Port, uint16_t GPIO_P
       // Es soll eine andere LED leuchten :( Deshalb brechen wir ab, aber geben vorher noch den Semaphor wieder frei
       printf("Es laeuft der Task fuer Farbe %s aber die Farbe %d ist jetzt dran\n", color, current_led);
       osSemaphoreRelease(myBinarySemHandle);
+      osDelay(1);
       continue; // brich hier ab und fang die for-Schleife nochmal von vorne an
     }
 
@@ -372,6 +373,7 @@ void switch_color(char* color, int led, GPIO_TypeDef* GPIO_Port, uint16_t GPIO_P
     // Der erste Task der osSemaphoreAcquire aufgerufen hat kommt zuerst dran (FIFO)
     printf("Farbe %s fertig\n\n", color);
     osSemaphoreRelease(myBinarySemHandle);
+    osDelay(1);
   }
 }
 
